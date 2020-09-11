@@ -1,9 +1,0 @@
-ts=0:0.1:10;
-x0=[20,4];
-[t,x]=ode45('shier',ts,x0);
-[t,x],	
-plot(t,x),grid,
-gtext('x1(t)'),gtext('x2(t)'),
-pause,
-plot(x(:,1),x(:,2)),grid,
-xlabel('x1'),ylabel('x2') 

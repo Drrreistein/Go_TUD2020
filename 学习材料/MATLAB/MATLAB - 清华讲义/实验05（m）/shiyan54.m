@@ -1,9 +1,0 @@
-n=100;b=[1:n]';
-a1=sparse(1:n,1:n,4,n,n);
-a2=sparse(2:n,1:n-1,1,n,n);
-a=a1+a2+a2';
-tic;x=a\b;t1=toc
-aa=full(a);
-tic;xx=aa\b;t2=toc
-y=sum(x)
-yy=sum(xx)
