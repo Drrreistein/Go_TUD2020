@@ -110,7 +110,7 @@ while ~isempty(T)
 end
 
 % generate path
-path=[data_num-1]; % end point
+path=[data_num-1];
 dat = data(2:end,:);
 m=size(dat,1);
 while m~=0
