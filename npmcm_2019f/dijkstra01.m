@@ -40,29 +40,32 @@ while ~isempty(T)
     data_tmp = data(T+1,:);
     [~, hh ]= min(data_tmp(:,9));
     current=data_tmp(hh,:);
+    T(find(T==data_tmp(hh,1))) = []; % remove node with min distance to Start from T
+    S = [S data_tmp(hh,1)]; % add the
     
-    reminder = 0;
+    %     reminder = 0;
     for i=1:length(T)
-        if i==503
-%             pause(1);
-        end
-
+        %         if i==503
+        % %             pause(1);
+        %         end
+        
         % space distance btw. 2 points
         dist = pdist([current(2:4); data(T(i)+1, 2:4)], 'euclidean');
         
         % compute vertical and horizontal error
-%         if data(T(i)+1,10)>=0 && data(T(i)+1,10)<=data_num % not NaN
-%             err_h = data(data(T(i)+1,10)+1,7) + dist*delta;
-%             err_v = data(data(T(i)+1,10)+1,8) + dist*delta;
-%             dist_path = data(data(T(i)+1,10)+1,9) + dist; % ?????????+????
-            err_h = current(7) + dist*delta;
-            err_v = current(8) + dist*delta;
-            dist_path = current(9) + dist; % ?????????+????
-%         else
-%             err_h=dist*delta;
-%             err_v=dist*delta;
-%             dist_path = dist;
-%         end
+        if data(T(i)+1,10)>=0 && data(T(i)+1,10)<=data_num % not NaN
+            err_h = data(data(T(i)+1,10)+1,7) + dist*delta;
+            err_v = data(data(T(i)+1,10)+1,8) + dist*delta;
+            dist_path = data(data(T(i)+1,10)+1,9) + dist; % ?????????+????
+            
+            %             err_h = current(7) + dist*delta;
+            %             err_v = current(8) + dist*delta;
+            %             dist_path = current(9) + dist; % ?????????+????
+        else
+            err_h=dist*delta;
+            err_v=dist*delta;
+            dist_path = dist;
+        end
         
         % clear horizontal error
         if err_h<beta1 && err_v<beta2 && data(T(i)+1,5)==0 && dist_path<data(T(i)+1, 9)
@@ -70,7 +73,7 @@ while ~isempty(T)
             data(T(i)+1,10) = current(1); % update previous node
             data(T(i)+1,7)=0;
             data(T(i)+1,8)=err_v;
-            reminder =1;
+            %             reminder =1;
         end
         
         % clear verical  error
@@ -79,7 +82,7 @@ while ~isempty(T)
             data(T(i)+1,10) = current(1); % update previous node
             data(T(i)+1,7)=err_h;
             data(T(i)+1,8)=0;
-            reminder =1;
+            %             reminder =1;
         end
         
         % check if end point arrived
@@ -87,24 +90,18 @@ while ~isempty(T)
             data(T(i)+1,9) = dist_path; % update min_dist
             data(T(i)+1,10) = current(1); % update previous node
             data(T(i)+1,7)=err_h;
-            data(T(i)+1,8)=err_v;           
-            reminder =1;
+            data(T(i)+1,8)=err_v;
+            %             reminder =1;
         end
         
     end
     
-    if reminder
-        T(find(T==data_tmp(hh,1))) = []; % remove node with min distance to Start from T
-        S = [S data_tmp(hh,1)]; % add the
-    else
-        tmp = find(data(:,1)==current(1));
-        data(tmp,7) = 0;data(tmp,8) = 0;data(tmp,9) = inf;data(tmp,10) = NaN;
+    
+    if data_tmp(hh)==data(end,1)
+        disp('got it:');
+        break;
     end
     
-%     if data_tmp(hh)==data(end,1) 
-%         disp('got it:');
-%         break;
-%     end
 end
 
 %% generate path
@@ -128,11 +125,11 @@ plot3([data(1,2) dat(path(end),2)],[data(1,3) dat(path(end),3)],[data(1,4) dat(p
 axis equal
 xlabel('x');ylabel('y');zlabel('z');
 %%
-% 
+%
 % % searchPath
 % dat = data(2:end,:);
 % searchPath(dat,size(dat,1));
-% 
+%
 % function searchPath(dat, n)
 % m = dat(n,10);
 % %     PATH= [PATH m];
@@ -140,7 +137,7 @@ xlabel('x');ylabel('y');zlabel('z');
 % if m~=0
 %     searchPath(dat, dat(n,10));
 % end
-% 
+%
 % end
 
 
